@@ -1,0 +1,36 @@
+<project name="androidcontroller" default="run-jar" basedir=".">
+	
+    <property name="version" value="0.1" />
+    <property name="src" value="." />
+    <property name="dist" value="dist" />
+    <property name="jarname" value="androidcontroller.jar" />
+        
+    <target name="clean">
+        <delete dir="${dist}" />
+        <delete dir="${docs}" />
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="${dist}" />
+        <javac srcdir="${src};" destdir="${dist}" debug="false" source="5" verbose="no" target="5">
+            <classpath>
+
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="jar" depends="compile">
+        <jar destfile="${dist}/${jarname}" basedir="${dist}/" level="9">
+            <manifest>
+                <attribute name="Main-Class" value="com.embege.androidcontroller.AndroidController" />
+                <attribute name="Class-Path" value=" " />
+            </manifest>
+        </jar>
+    </target>
+	
+    <target name="run-jar" depends="jar">
+        <java jar="${dist}/${jarname}" fork="true" dir="${dist}" classpath=".">
+        </java>
+    </target>
+
+</project>
