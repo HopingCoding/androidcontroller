@@ -16,10 +16,14 @@ import java.io.InputStreamReader;
 
 import javax.swing.JPanel;
 
+
 public class DrawPanel extends JPanel {
 
 	
-	static Thread thread;
+	static Thread readThread;
+	static Thread convertThread;
+	static int lastRead = 0;
+	static int lastConvert = 0;
 	static BufferedImage bi;
 	static boolean stop = false;
 	static String currentDevice;
@@ -27,14 +31,16 @@ public class DrawPanel extends JPanel {
 	static int height;
 	static int bpp;
 	static DrawPanel self;
+	
 
 	static void getFrameBuffer() {
 		long t0 = System.nanoTime();
 		try {
-			ProcessBuilder pb = new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "pull", "/dev/graphics/fb0", SDKPath.TEMPFILE);
+			ProcessBuilder pb = new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "pull", "/dev/graphics/fb0", SDKPath.TEMPFILE);
 			pb.redirectOutput();
 			
 			Process p = pb.start();
+			/*
 			InputStream is = p.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
@@ -43,11 +49,13 @@ public class DrawPanel extends JPanel {
 			while ((line = br.readLine()) != null) {
 				Log.log(line);				
 			}
-			
-			
+			*/
+			p.waitFor();
 			
 		} catch (IOException e)
 		{
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
@@ -62,7 +70,6 @@ public class DrawPanel extends JPanel {
 		
 		try {
 			is = new FileInputStream(SDKPath.TEMPFILE);
-			
 			
 			switch (bpp) {
 
@@ -131,14 +138,12 @@ public class DrawPanel extends JPanel {
 		
 		bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
 		
-		if (thread != null ) {
+		if (readThread != null ) {
 			//stop = true;
 			return;
 		}
 		
-		
-		
-		thread = new Thread("painter")
+		readThread = new Thread("ReadThread")
 		{
 			@Override
 			public void run() 
@@ -148,16 +153,39 @@ public class DrawPanel extends JPanel {
 				{
 					getFrameBuffer();
 					
+
 					fb2bi();
 					
 					self.repaint();
+					
+					lastRead++;
 					
 				}
 				Log.log("paintthread stopped");
 			}
 		};
-		thread.start();
+		readThread.start();
 		stop = false;
+		
+//		convertThread = new Thread("convertThread")
+//		{
+//			public void run() {
+//				while (true)
+//				{
+//					if (lastConvert < lastRead)
+//					{
+//						lastConvert++;
+//					}
+//					else
+//					{
+//						Thread.yield();
+//					}
+//				}
+//			};
+//		
+//		};
+		
+//		convertThread.start();
 		
 	}
 	
@@ -166,7 +194,7 @@ public class DrawPanel extends JPanel {
 		System.out.println("Down "+x+" "+y);
 		try {
 			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "57", "1234" ).start().waitFor();	
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "57", "1234" ).start().waitFor();	
 			
 		} catch (IOException e)
 		{
@@ -184,13 +212,13 @@ public class DrawPanel extends JPanel {
 		System.out.println("Up "+x+" "+y);
 		try {
 			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "58", "0" ).start().waitFor();	
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "58", "0" ).start().waitFor();	
 			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "0", "0", "0" ).start().waitFor();	
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "0", "0", "0" ).start().waitFor();	
 			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "57", "-1" ).start().waitFor();				
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "57", "-1" ).start().waitFor();				
 			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "0", "0", "0" ).start().waitFor();	
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "0", "0", "0" ).start().waitFor();	
 			
 			
 			
@@ -198,7 +226,6 @@ public class DrawPanel extends JPanel {
 		{
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -217,26 +244,25 @@ public class DrawPanel extends JPanel {
 		
 		try {
 			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "58", "30" ).start().waitFor();	
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "48", "8" ).start().waitFor();
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "58", "30" ).start().waitFor();	
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "48", "8" ).start().waitFor();
+
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "53", ix+"" ).start().waitFor();
 			
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "54", iy+"" ).start().waitFor();
 			
-			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "53", ix+"" ).start().waitFor();
-			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "3", "54", iy+"" ).start().waitFor();
-			
-			new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "0", "0", "0" ).start().waitFor();
+			new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "sendevent", "/dev/input/event2", "0", "0", "0" ).start().waitFor();
 			
 			
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+	
 	
 	public DrawPanel() {
 		self = this;

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -21,21 +22,27 @@ public class Log extends JPanel {
 	
 	JTextPane textarea;
 	private Log() {
-	
-		setPreferredSize(new Dimension(450, 110));
+		setBorder(BorderFactory.createTitledBorder("Log"));
+		setPreferredSize(new Dimension(300, 110));
 		setLayout(new BorderLayout());
 //		setMinimumSize(new Dimension(100, 100));
 //		setMaximumSize(new Dimension(10000, 200));
 		
-		textarea = new JTextPane();
+		textarea = new JTextPane(){
+		    public boolean getScrollableTracksViewportWidth()
+		    {
+		        return getUI().getPreferredSize(this).width 
+		            <= getParent().getSize().width;
+		    }
+		};
 		textarea.setEditable(false);
-		
 		textarea.setFont(new Font("Courier", Font.PLAIN, 10));
 		
 		JScrollPane pane = new JScrollPane(textarea);
 		pane.setMinimumSize(new Dimension(100, 100));
 		pane.setMaximumSize(new Dimension(10000, 200));
-		pane.getViewport().setMaximumSize(new Dimension(10000, 200));
+		//pane.getViewport().setMaximumSize(new Dimension(10000, 200));
+		
 		
 		add(pane);
 		

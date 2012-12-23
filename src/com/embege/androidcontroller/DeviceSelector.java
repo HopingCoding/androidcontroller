@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -22,6 +23,8 @@ public class DeviceSelector extends JPanel {
 	String currentDevice = null;
 	
 	public DeviceSelector() {
+		setBorder(BorderFactory.createTitledBorder("List of devices"));
+		
 		list = new JComboBox();
 		add(list);
 		
@@ -53,12 +56,14 @@ public class DeviceSelector extends JPanel {
 			}
 		});
 		
+		
+		
 		refresh();		
 	}
 	
 	public void getFormat() {
 		try {
-			ProcessBuilder pb = new ProcessBuilder(SDKPath.PATH, "-s", currentDevice, "shell", "ioctl", "-rl", "28", "/dev/graphics/fb0", "17920");
+			ProcessBuilder pb = new ProcessBuilder(SDKPath.PATH2ADB, "-s", currentDevice, "shell", "ioctl", "-rl", "28", "/dev/graphics/fb0", "17920");
 			pb.redirectOutput();
 			
 			Process p = pb.start();
@@ -100,7 +105,7 @@ public class DeviceSelector extends JPanel {
 		list.removeAllItems();
 		
 		try {
-			ProcessBuilder pb = new ProcessBuilder(SDKPath.PATH, "devices");
+			ProcessBuilder pb = new ProcessBuilder(SDKPath.PATH2ADB, "devices");
 			pb.redirectOutput();
 			
 			Process p = pb.start();
@@ -121,6 +126,7 @@ public class DeviceSelector extends JPanel {
 			int result = p.waitFor();
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.log("Cant get device list, check adb path. ");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
