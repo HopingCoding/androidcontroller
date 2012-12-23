@@ -60,7 +60,7 @@ public class DrawPanel extends JPanel {
 		catch (InterruptedException e) 
 		{
 			e.printStackTrace();
-		
+		}
 		
 		//Log.log("frame of " + currentDevice);
 		long t1 = System.nanoTime();
