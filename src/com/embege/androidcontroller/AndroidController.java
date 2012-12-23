@@ -52,8 +52,6 @@ public class AndroidController extends JFrame {
 		add (split);
 		
 		
-		
-		
 		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 
 		left.add( new SDKPath() );

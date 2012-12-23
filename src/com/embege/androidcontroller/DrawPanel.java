@@ -52,16 +52,20 @@ public class DrawPanel extends JPanel {
 			*/
 			p.waitFor();
 			
-		} catch (IOException e)
+		} 
+		catch (IOException e)
 		{
 			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} 
+		catch (InterruptedException e) 
+		{
 			e.printStackTrace();
-		}
+		
 		
 		//Log.log("frame of " + currentDevice);
 		long t1 = System.nanoTime();
-		System.out.println( "read "+(t1-t0)/1000000000.0);
+		float f = (float) ((t1-t0)/1000000000.0);
+		Stats.jlRead.setText("Reading: "+f);
 	}
 	
 	public static void fb2bi() {
@@ -121,7 +125,8 @@ public class DrawPanel extends JPanel {
 			
 		}
 		long t1 = System.nanoTime();
-		System.out.println( "conv "+(t1-t0)/1000000000.0);
+		float f = (float) ((t1-t0)/1000000000.0);
+		Stats.jlConv.setText("Converting: "+f);
 	}
 	
 	private static final int byteToInt(byte[] b)
