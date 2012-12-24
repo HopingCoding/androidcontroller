@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -25,6 +26,8 @@ public class Log extends JPanel {
 		setBorder(BorderFactory.createTitledBorder("Log"));
 		setPreferredSize(new Dimension(300, 110));
 		setLayout(new BorderLayout());
+		setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		
 //		setMinimumSize(new Dimension(100, 100));
 //		setMaximumSize(new Dimension(10000, 200));
 		

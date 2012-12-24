@@ -13,6 +13,7 @@ import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
@@ -24,6 +25,7 @@ public class DeviceSelector extends JPanel {
 	
 	public DeviceSelector() {
 		setBorder(BorderFactory.createTitledBorder("List of devices"));
+		setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		
 		list = new JComboBox();
 		add(list);

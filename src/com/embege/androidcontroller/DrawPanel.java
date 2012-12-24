@@ -52,6 +52,8 @@ public class DrawPanel extends JPanel {
 			*/
 			p.waitFor();
 			
+			
+			
 		} 
 		catch (IOException e)
 		{
@@ -172,24 +174,27 @@ public class DrawPanel extends JPanel {
 		readThread.start();
 		stop = false;
 		
-//		convertThread = new Thread("convertThread")
-//		{
-//			public void run() {
-//				while (true)
-//				{
-//					if (lastConvert < lastRead)
-//					{
-//						lastConvert++;
-//					}
-//					else
-//					{
-//						Thread.yield();
-//					}
-//				}
-//			};
-//		
-//		};
+		convertThread = new Thread("convertThread")
+		{
+			public void run() {
+				while (true)
+				{
+					if (lastConvert < lastRead)
+					{
+						fb2bi();
+						
+						self.repaint();
+						
+						lastConvert++;
+					}
+					else
+					{
+						Thread.yield();
+					}
+				}
+			};
 		
+		};
 //		convertThread.start();
 		
 	}

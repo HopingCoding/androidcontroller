@@ -2,6 +2,7 @@ package com.embege.androidcontroller;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -17,6 +18,7 @@ public class Stats extends JPanel {
 	public Stats() {
 		setBorder(BorderFactory.createTitledBorder("Stats"));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		
 		jlRead = (JLabel) add ( new JLabel("Reading: "+DrawPanel.lastRead) );
 		jlConv = (JLabel) add ( new JLabel("Converting: "+DrawPanel.lastConvert) );

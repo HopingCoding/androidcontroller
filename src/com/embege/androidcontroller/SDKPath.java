@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,10 +27,13 @@ public class SDKPath extends JPanel {
 	
 	public SDKPath() 
 	{
+		setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		setBorder(BorderFactory.createTitledBorder("Path to adb"));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		tf = (JTextField) add (new JTextField(PATH2ADB) );
+		tf.setColumns(180);
+		tf.setMaximumSize( tf.getPreferredSize() );
 		
 		JButton bu = (JButton) add(new JButton("Browse"));
 		bu.addActionListener(new ActionListener() {
