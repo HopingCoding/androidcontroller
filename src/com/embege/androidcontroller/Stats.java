@@ -17,7 +17,7 @@ public class Stats extends JPanel {
 	
 	public Stats() {
 		setBorder(BorderFactory.createTitledBorder("Stats"));
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		//setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		
 		jlRead = (JLabel) add ( new JLabel("Reading: "+DrawPanel.lastRead) );

@@ -126,11 +126,9 @@ public class DeviceSelector extends JPanel {
 			}
 
 			int result = p.waitFor();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log.log("Cant get device list, check adb path. ");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 
 	}
